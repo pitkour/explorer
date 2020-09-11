@@ -1,2 +1,2 @@
-mod model;
-mod schema;
+pub mod model;
+pub mod schema;

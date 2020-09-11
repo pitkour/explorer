@@ -1,4 +1,4 @@
-#[derive(Queryable, Debug)]
+#[derive(Queryable, juniper::GraphQLObject, Debug)]
 pub struct Team {
     pub tag: String,
     pub name: String,
@@ -7,7 +7,7 @@ pub struct Team {
     pub coins: i32,
 }
 
-#[derive(Queryable, Debug)]
+#[derive(Queryable, juniper::GraphQLObject, Debug)]
 pub struct TeamMember {
     pub tag: String,
     pub uuid: String,

@@ -1,68 +1,49 @@
+#![feature(proc_macro_hygiene, decl_macro)]
+
 #[macro_use]
 extern crate diesel;
+#[macro_use]
+extern crate rocket;
 
-use diesel::prelude::*;
+use anyhow::Result;
+use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::sqlite::SqliteConnection;
-use juniper::{EmptyMutation, RootNode};
-use rocket::response::content;
-use rocket::State;
+use juniper::RootNode;
 
-use crate::models::Team;
-use crate::schema::pitkour_teams::dsl::pitkour_teams;
+use crate::graphql::context::Context;
+use crate::graphql::mutation::Mutation;
+use crate::graphql::query::Query;
 
 mod database;
 mod graphql;
+mod handlers;
 
-type Schema = RootNode<'static, Team, EmptyMutation<Database>, EmptySubscription<Database>>;
+type Schema = RootNode<'static, Query, Mutation>;
+type DatabasePool = Pool<ConnectionManager<SqliteConnection>>;
 
-#[rocket::get("/")]
-fn graphiql() -> content::Html<String> {
-    juniper_rocket::graphiql_source("/graphql")
-}
-
-#[rocket::get("/graphql?<request>")]
-fn get_graphql_handler(
-    context: State<Database>,
-    request: juniper_rocket::GraphQLRequest,
-    schema: State<Schema>,
-) -> juniper_rocket::GraphQLResponse {
-    request.execute_sync(&schema, &context)
-}
-
-#[rocket::post("/graphql", data = "<request>")]
-fn post_graphql_handler(
-    context: State<Database>,
-    request: juniper_rocket::GraphQLRequest,
-    schema: State<Schema>,
-) -> juniper_rocket::GraphQLResponse {
-    request.execute_sync(&schema, &context)
-}
-
-fn main() {
-    let connection = establish_connection();
-    let teams = pitkour_teams
-        .load::<Team>(&connection)
-        .expect("Error loading posts");
-    println!("Displaying {} teams", teams.len());
-    for team in teams {
-        println!("{:?}", team);
-    }
+fn main() -> Result<()> {
+    let pool = create_pool()?;
+    let context = Context::new(pool);
+    let schema = Schema::new(Query::default(), Mutation::default());
+    let root_routes = rocket::routes![
+        handlers::root_handler,
+        handlers::get_graphql_handler,
+        handlers::post_graphql_handler,
+        handlers::graphiql_handler,
+        handlers::playground_handler
+    ];
     rocket::ignite()
-        .manage(Database::new())
-        .manage(Schema::new(
-            Team,
-            EmptyMutation::<Database>::new(),
-            EmptySubscription::<Database>::new(),
-        ))
-        .mount(
-            "/",
-            rocket::routes![graphiql, get_graphql_handler, post_graphql_handler],
-        )
+        .manage(context)
+        .manage(schema)
+        .mount("/", root_routes)
         .launch();
+    Ok(())
 }
 
-fn establish_connection() -> SqliteConnection {
-    let database_url = "pitkour.db";
-    SqliteConnection::establish(database_url)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+const DATABASE_URL: &str = "pitkour.db";
+
+fn create_pool() -> Result<DatabasePool> {
+    let manager = ConnectionManager::<SqliteConnection>::new(DATABASE_URL);
+    let pool = Pool::builder().max_size(3).build(manager)?;
+    Ok(pool)
 }
