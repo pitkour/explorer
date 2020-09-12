@@ -6,7 +6,7 @@ extern crate diesel;
 extern crate rocket;
 
 use anyhow::Result;
-use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
 use diesel::sqlite::SqliteConnection;
 use juniper::RootNode;
 
@@ -20,6 +20,7 @@ mod handlers;
 
 type Schema = RootNode<'static, Query, Mutation>;
 type DatabasePool = Pool<ConnectionManager<SqliteConnection>>;
+type Connection = PooledConnection<ConnectionManager<SqliteConnection>>;
 
 fn main() -> Result<()> {
     let pool = create_pool()?;

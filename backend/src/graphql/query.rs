@@ -1,10 +1,10 @@
-use crate::database::model::{Team, TeamMember};
-use crate::database::schema::pitkour_teams::columns::tag;
+use diesel::{ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl};
+use juniper::{FieldError, FieldResult};
+
+use crate::database::model::Team;
 use crate::database::schema::pitkour_teams::dsl::pitkour_teams;
-use crate::database::schema::pitkour_teams_members::dsl::pitkour_teams_members;
+use crate::database::schema::pitkour_teams::name as team_name;
 use crate::graphql::context::Context;
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
-use juniper::FieldResult;
 
 pub struct Query;
 
@@ -16,30 +16,36 @@ impl Default for Query {
 
 #[juniper::object(Context = Context)]
 impl Query {
-    fn teams(context: &Context) -> FieldResult<Vec<Team>> {
-        let pool = context.database_pool();
-        let connection = pool.get()?;
-        let teams = pitkour_teams.load::<Team>(&connection)?;
+    fn teams(context: &Context, first: Option<i32>) -> FieldResult<Vec<Team>> {
+        let connection = context.connection()?;
+        let teams = if let Some(first) = first {
+            pitkour_teams
+                .limit(first as i64)
+                .load::<Team>(&connection)?
+        } else {
+            pitkour_teams.load::<Team>(&connection)?
+        };
         Ok(teams)
     }
 
-    fn get_team_by_tag(context: &Context, team_tag: String) -> FieldResult<Option<Team>> {
-        let pool = context.database_pool();
-        let connection = pool.get()?;
-        let mut found: Vec<Team> = pitkour_teams
-            .filter(tag.eq(team_tag))
-            .load::<Team>(&connection)?;
-        Ok(if found.is_empty() {
-            None
+    fn team(
+        context: &Context,
+        tag: Option<String>,
+        name: Option<String>,
+    ) -> FieldResult<Option<Team>> {
+        if let Some(tag) = tag {
+            let connection = context.connection()?;
+            let team = pitkour_teams.find(tag).first(&connection).optional()?;
+            Ok(team)
+        } else if let Some(name) = name {
+            let connection = context.connection()?;
+            let team = pitkour_teams
+                .filter(team_name.eq(name))
+                .first(&connection)
+                .optional()?;
+            Ok(team)
         } else {
-            Some(found.remove(0))
-        })
-    }
-
-    fn teams_members(context: &Context) -> FieldResult<Vec<TeamMember>> {
-        let pool = context.database_pool();
-        let connection = pool.get()?;
-        let teams_members = pitkour_teams_members.load::<TeamMember>(&connection)?;
-        Ok(teams_members)
+            Err(FieldError::from("Missing a 'tag' or 'name' of a team."))
+        }
     }
 }

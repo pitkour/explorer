@@ -1,17 +1,17 @@
-#[derive(Queryable, juniper::GraphQLObject, Debug)]
+#[derive(Queryable, Debug)]
 pub struct Team {
-    pub tag: String,
-    pub name: String,
-    pub creator: String,
-    pub create_time: f64,
-    pub coins: i32,
+    pub(crate) tag: String,
+    pub(crate) name: String,
+    pub(crate) creator: String,
+    pub(crate) create_time: f64,
+    pub(crate) coins: i32,
 }
 
-#[derive(Queryable, juniper::GraphQLObject, Debug)]
+#[derive(Queryable, Debug)]
 pub struct TeamMember {
-    pub tag: String,
-    pub uuid: String,
-    pub rank: String,
-    pub join_time: f64,
-    pub coins_paid: i32,
+    pub(crate) tag: String,
+    pub(crate) uuid: String,
+    pub(crate) rank: String,
+    pub(crate) join_time: f64,
+    pub(crate) coins_paid: i32,
 }

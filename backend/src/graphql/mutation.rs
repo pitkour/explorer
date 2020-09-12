@@ -1,8 +1,9 @@
-use crate::database::model::Team;
 use crate::database::schema::pitkour_teams::dsl::pitkour_teams;
 use crate::graphql::context::Context;
-use diesel::QueryDsl;
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::FieldResult;
+
+use crate::database::schema::pitkour_teams::name as team_name;
 
 pub struct Mutation;
 
@@ -14,10 +15,12 @@ impl Default for Mutation {
 
 #[juniper::object(Context = Context)]
 impl Mutation {
-    fn set_team_name(context: &Context, tag: String, name: String) -> FieldResult<Team> {
+    fn set_team_name(context: &Context, tag: String, name: String) -> FieldResult<i32> {
         let pool = context.database_pool();
         let connection = pool.get()?;
-        // diesel::update(pitkour_teams.find(tag)).set();
-        unimplemented!()
+        let affected_rows = diesel::update(pitkour_teams.find(tag))
+            .set(team_name.eq(name))
+            .execute(&connection)?;
+        Ok(affected_rows as i32)
     }
 }

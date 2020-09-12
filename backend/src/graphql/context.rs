@@ -1,4 +1,5 @@
-use crate::DatabasePool;
+use crate::{Connection, DatabasePool};
+use anyhow::Result;
 
 pub struct Context {
     database_pool: DatabasePool,
@@ -13,5 +14,10 @@ impl Context {
 
     pub fn database_pool(&self) -> &DatabasePool {
         &self.database_pool
+    }
+
+    pub fn connection(&self) -> Result<Connection> {
+        let connection = self.database_pool.get()?;
+        Ok(connection)
     }
 }
