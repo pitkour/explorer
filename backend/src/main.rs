@@ -5,18 +5,17 @@ extern crate diesel;
 #[macro_use]
 extern crate rocket;
 
+mod database;
+mod graphql;
+mod handlers;
+
+use crate::graphql::context::Context;
+use crate::graphql::schema::mutation::Mutation;
+use crate::graphql::schema::query::Query;
 use anyhow::Result;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
 use diesel::sqlite::SqliteConnection;
 use juniper::RootNode;
-
-use crate::graphql::context::Context;
-use crate::graphql::mutation::Mutation;
-use crate::graphql::query::Query;
-
-mod database;
-mod graphql;
-mod handlers;
 
 type Schema = RootNode<'static, Query, Mutation>;
 type DatabasePool = Pool<ConnectionManager<SqliteConnection>>;
@@ -25,7 +24,7 @@ type Connection = PooledConnection<ConnectionManager<SqliteConnection>>;
 fn main() -> Result<()> {
     let pool = create_pool()?;
     let context = Context::new(pool);
-    let schema = Schema::new(Query::default(), Mutation::default());
+    let schema = Schema::new(Query, Mutation);
     let root_routes = rocket::routes![
         handlers::root_handler,
         handlers::get_graphql_handler,
