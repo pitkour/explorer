@@ -1,8 +1,6 @@
 module.exports = {
     devServer: {
-        public: 'app.local.test'
+        public: "app.local.test"
     },
-    "transpileDependencies": [
-        "vuetify"
-    ],
-}
+    transpileDependencies: ["vuetify"]
+};

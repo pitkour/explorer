@@ -1,9 +1,9 @@
-import Vue from 'vue';
-import App from './App.vue';
-import vuetify from './plugins/vuetify';
-import apolloProvider from './plugins/apollo';
-import store from './store';
-import router from './router';
+import Vue from "vue";
+import App from "./App.vue";
+import vuetify from "./plugins/vuetify";
+import apolloProvider from "./plugins/apollo";
+import store from "./store";
+import router from "./router";
 
 Vue.config.productionTip = false;
 
@@ -15,4 +15,4 @@ const options = {
     render: h => h(App)
 };
 
-new Vue(options).$mount('#app');
+new Vue(options).$mount("#app");
