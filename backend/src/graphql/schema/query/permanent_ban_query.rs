@@ -8,9 +8,8 @@ use juniper::{FieldError, FieldResult};
 
 pub struct PermanentBanQuery;
 
-#[juniper::object(Context = Context)]
 impl PermanentBanQuery {
-    fn permanent_bans(context: &Context, first: Option<i32>) -> FieldResult<Vec<PermanentBan>> {
+    pub fn permanent_bans(context: &Context, first: Option<i32>) -> FieldResult<Vec<PermanentBan>> {
         let connection = context.connection()?;
         let permanent_bans = if let Some(first) = first {
             pitkour_permanent_bans
@@ -22,7 +21,7 @@ impl PermanentBanQuery {
         Ok(permanent_bans)
     }
 
-    fn permanent_ban(
+    pub fn permanent_ban(
         context: &Context,
         uuid: Option<String>,
         nick: Option<String>,

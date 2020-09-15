@@ -8,7 +8,6 @@ use juniper::{FieldError, FieldResult};
 
 pub struct UserQuery;
 
-#[juniper::object(Context = Context)]
 impl UserQuery {
     pub fn users(context: &Context, first: Option<i32>) -> FieldResult<Vec<User>> {
         let connection = context.connection()?;

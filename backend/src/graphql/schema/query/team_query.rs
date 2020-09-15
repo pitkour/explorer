@@ -9,7 +9,6 @@ use juniper::{FieldError, FieldResult};
 
 pub struct TeamQuery;
 
-#[juniper::object(Context = Context)]
 impl TeamQuery {
     pub fn teams(context: &Context, first: Option<i32>) -> FieldResult<Vec<Team>> {
         let connection = context.connection()?;

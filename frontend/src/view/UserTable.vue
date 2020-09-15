@@ -2,7 +2,7 @@
     <v-container>
         <v-data-table
             :headers="headers"
-            :items="userQuery.users"
+            :items="users"
             :items-per-page="10"
             :footer-props="{ 'items-per-page-options': [5, 10, 20, -1] }"
             class="my-10 elevation-2"
@@ -15,8 +15,8 @@ import Queries from "../api/queries";
 
 export default {
     apollo: {
-        userQuery: {
-            query: Queries.getUserQuery,
+        users: {
+            query: Queries.getUsers,
             variables: {
                 items: 50
             }
@@ -25,9 +25,7 @@ export default {
     name: "UserTable",
     data() {
         return {
-            userQuery: {
-                users: []
-            },
+            users: [],
             headers: [
                 {
                     text: "UUID",

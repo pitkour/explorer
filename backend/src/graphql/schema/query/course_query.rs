@@ -9,7 +9,6 @@ use juniper::{FieldError, FieldResult};
 
 pub struct CourseQuery;
 
-#[juniper::object(Context = Context)]
 impl CourseQuery {
     pub fn courses(context: &Context, first: Option<i32>) -> FieldResult<Vec<Course>> {
         let connection = context.connection()?;

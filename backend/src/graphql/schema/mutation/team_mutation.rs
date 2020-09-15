@@ -51,7 +51,6 @@ impl UpdateTeamPayload {
 
 pub struct TeamMutation;
 
-#[juniper::object(Context = Context)]
 impl TeamMutation {
     pub fn create_team(
         context: &Context,
