@@ -1,17 +1,16 @@
 <template>
-<v-container>
-    <v-row class="text-center">
-        <v-col cols="12">
-            <h1 class="mb-2">PitkouR Explorer</h1>
-            <p>a</p>
-        </v-col>
-    </v-row>
-</v-container>
+    <v-container>
+        <v-row class="text-center">
+            <v-col cols="12">
+                <h1 class="mb-2">Explorer</h1>
+                <p>Explore the data stored in PitkouR's database!</p>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
 export default {
-    name: 'Home',
-    components: {}
-}
+    name: "Home"
+};
 </script>

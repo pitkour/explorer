@@ -9,13 +9,15 @@
                     src="https://avatars1.githubusercontent.com/u/34170911"
                     transition="scale-transition"
                     width="42"
-                    to="/"
                 />
             </div>
 
             <div class="ml-6">
                 <v-btn to="/" class="mx-2" text>
                     <span>home</span>
+                </v-btn>
+                <v-btn to="/users" class="mx-2" text>
+                    <span>users</span>
                 </v-btn>
             </div>
 
@@ -39,10 +41,6 @@
 
 <script>
 export default {
-    name: "App",
-    components: {},
-    data() {
-        return {};
-    },
+    name: "App"
 };
 </script>

@@ -29,10 +29,10 @@ pub fn post_graphql_handler(
 
 #[get("/graphiql")]
 pub fn graphiql_handler() -> Html<String> {
-    juniper_rocket::graphiql_source("http://localhost:8000/graphql")
+    juniper_rocket::graphiql_source("http://api.local.test:8000/graphql")
 }
 
 #[get("/playground")]
 pub fn playground_handler() -> Html<String> {
-    juniper_rocket::playground_source("http://localhost:8000/graphql")
+    juniper_rocket::playground_source("http://api.local.test:8000/graphql")
 }
