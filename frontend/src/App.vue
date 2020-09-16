@@ -19,6 +19,12 @@
                 <v-btn to="/users" class="mx-2" text>
                     <span>users</span>
                 </v-btn>
+                <v-btn to="/teams" class="mx-2" text>
+                    <span>teams</span>
+                </v-btn>
+                <v-btn to="/permanent-bans" class="mx-2" text>
+                    <span>permanent bans</span>
+                </v-btn>
             </div>
 
             <v-spacer></v-spacer>

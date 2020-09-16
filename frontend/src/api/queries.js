@@ -8,6 +8,29 @@ export default {
                 uuid
                 level
                 experience
+                firstJoinTime
+            }
+        }
+    `,
+    getTeams: gql`
+        query getTeams($items: Int!) {
+            teams(first: $items) {
+                tag
+                name
+                creator
+                createTime
+                coins
+            }
+        }
+    `,
+    getPermanentBans: gql`
+        query getPermanentBans($items: Int!) {
+            permanentBans(first: $items) {
+                nick
+                uuid
+                performer
+                createTime
+                reason
             }
         }
     `

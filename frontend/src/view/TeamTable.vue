@@ -2,7 +2,7 @@
     <v-container>
         <v-data-table
             :headers="headers"
-            :items="users"
+            :items="teams"
             :items-per-page="10"
             :footer-props="{ 'items-per-page-options': [5, 10, 15, 20, -1] }"
             class="my-10 elevation-2"
@@ -14,38 +14,38 @@
 import Queries from "../api/queries";
 
 export default {
-    name: "UserTable",
+    name: "TeamTable",
     apollo: {
-        users: {
-            query: Queries.getUsers,
+        teams: {
+            query: Queries.getTeams,
             variables: {
-                items: 50 // TODO: how to create connection between this and items-per-page table property?
+                items: 50
             }
         }
     },
     data() {
         return {
-            users: [],
+            teams: [],
             headers: [
                 {
-                    text: "UUID",
-                    value: "uuid"
+                    text: "Tag",
+                    value: "tag"
                 },
                 {
-                    text: "Nick",
-                    value: "nick"
+                    text: "Name",
+                    value: "name"
                 },
                 {
-                    text: "Level",
-                    value: "level"
+                    text: "Creator",
+                    value: "creator"
                 },
                 {
-                    text: "Experience",
-                    value: "experience"
+                    text: "Create Time",
+                    value: "createTime"
                 },
                 {
-                    text: "First Login",
-                    value: "firstJoinTime" // TODO: How to map to date format?
+                    text: "Coins",
+                    value: "coins"
                 }
             ]
         };
