@@ -33,7 +33,7 @@ fn main() -> Result<()> {
         handlers::graphiql_handler,
         handlers::playground_handler
     ];
-    let allowed_origins = ["http://app.local.test:8080", "http://api.local.test:8000"];
+    let allowed_origins = ["http://app.local.test:9000", "http://api.local.test:8000"];
     let cors = CorsOptions::default()
         .allowed_origins(AllowedOrigins::some_exact(&allowed_origins))
         .to_cors()?;
