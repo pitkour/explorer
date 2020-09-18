@@ -12,7 +12,7 @@ const options = {
     apolloProvider,
     store,
     router,
-    render: h => h(App)
+    render: createElement => createElement(App)
 };
 
 new Vue(options).$mount("#app");

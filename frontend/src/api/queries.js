@@ -8,7 +8,7 @@ export default {
                 uuid
                 level
                 experience
-                firstJoinTime
+                firstLogin: firstJoinTime
             }
         }
     `,

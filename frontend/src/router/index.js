@@ -16,7 +16,7 @@ const routes = [
     {
         path: "/users",
         name: "Users",
-        component: UserTable // TODO: Create more abstract component to unify all these tables
+        component: UserTable
     },
     {
         path: "/teams",
