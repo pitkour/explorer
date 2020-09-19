@@ -4,7 +4,7 @@
             :headers="headers"
             :items="teams"
             :items-per-page="itemsPerPage"
-            :footer-props="{ 'items-per-page-options': [5, 10, 15, 20, -1] }"
+            :footer-props="{ itemsPerPageOptions: [5, 10, 15, 20, -1] }"
             class="my-10 elevation-2"
         >
             <template v-slot:[`item.createTime`]="{ item }">

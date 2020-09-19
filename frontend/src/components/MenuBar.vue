@@ -12,7 +12,7 @@
                 width="42"
             />
 
-            <v-toolbar-title class="ml-2"> Explorer </v-toolbar-title>
+            <v-toolbar-title class="ml-2">Explorer</v-toolbar-title>
 
             <v-spacer></v-spacer>
 

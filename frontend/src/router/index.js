@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../view/Home";
+import UserView from "../view/UserView";
 import UserTable from "../view/UserTable";
 import TeamTable from "../view/TeamTable";
 import PermanentBanTable from "../view/PermanentBanTable";
@@ -12,6 +13,11 @@ const routes = [
         path: "",
         name: "Home",
         component: Home
+    },
+    {
+        path: "/user/:uuid",
+        name: "User",
+        component: UserView
     },
     {
         path: "/users",
