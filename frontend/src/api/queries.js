@@ -39,6 +39,28 @@ export default {
             }
         }
     `,
+
+    getTeam: gql`
+        query getTeam($tag: String!) {
+            team(tag: $tag) {
+                tag
+                name
+                creator
+                createTime
+                coins
+                members {
+                    coinsPaid
+                    joinTime
+                    rank
+                    user {
+                        nick
+                        uuid
+                    }
+                }
+            }
+        }
+    `,
+
     getTeams: gql`
         query getTeams($items: Int!) {
             teams(first: $items) {
@@ -47,6 +69,7 @@ export default {
                 creator
                 createTime
                 coins
+                membersCount
             }
         }
     `,

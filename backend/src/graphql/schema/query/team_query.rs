@@ -1,11 +1,12 @@
+use diesel::prelude::*;
+use juniper::{FieldError, FieldResult};
+
 use crate::database::model::{Team, TeamMember};
 use crate::database::schema::pitkour_teams::dsl::pitkour_teams;
 use crate::database::schema::pitkour_teams::name as team_name;
 use crate::database::schema::pitkour_teams_members::dsl::pitkour_teams_members;
 use crate::database::schema::pitkour_teams_members::tag as member_team_tag;
 use crate::graphql::context::Context;
-use diesel::prelude::*;
-use juniper::{FieldError, FieldResult};
 
 pub struct TeamQuery;
 
@@ -49,6 +50,15 @@ impl TeamQuery {
 
 #[juniper::object(Context = Context)]
 impl Team {
+    pub fn members_count(&self, context: &Context) -> FieldResult<i32> {
+        let connection = context.connection()?;
+        let count: i64 = pitkour_teams_members
+            .filter(member_team_tag.eq(&self.tag))
+            .count()
+            .first(&connection)?;
+        Ok(count as i32)
+    }
+
     pub fn members(&self, context: &Context, first: Option<i32>) -> FieldResult<Vec<TeamMember>> {
         let connection = context.connection()?;
         let members = if let Some(first) = first {

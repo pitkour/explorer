@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../view/Home";
 import UserView from "../view/UserView";
 import UserTable from "../view/UserTable";
+import TeamView from "../view/TeamView";
 import TeamTable from "../view/TeamTable";
 import PermanentBanTable from "../view/PermanentBanTable";
 
@@ -23,6 +24,11 @@ const routes = [
         path: "/users",
         name: "Users",
         component: UserTable
+    },
+    {
+        path: "/team/:tag",
+        name: "Team",
+        component: TeamView
     },
     {
         path: "/teams",

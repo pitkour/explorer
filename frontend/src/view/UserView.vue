@@ -24,23 +24,7 @@
 <script>
 import Queries from "../api/queries";
 import DateUtil from "../util/date-util";
-
-function formatGroup(group) {
-    let first = true;
-    let result = "";
-    let split = group.split("_");
-    for (const part of split) {
-        if (first) {
-            first = false;
-        } else {
-            result += " ";
-        }
-        let prefix = part.substring(0, 1);
-        let residue = part.substring(1);
-        result += prefix + residue.toLowerCase();
-    }
-    return result;
-}
+import FormatUtil from "../util/format-util";
 
 export default {
     name: "UserView",
@@ -103,7 +87,7 @@ export default {
                 },
                 {
                     name: "Group",
-                    value: formatGroup(this.user.permissionGroup)
+                    value: FormatUtil.formatEnum(this.user.permissionGroup)
                 },
                 {
                     name: "Play Time",
