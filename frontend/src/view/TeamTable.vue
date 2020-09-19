@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card class="mt-6 elevation-2">
+        <v-card class="elevation-2">
             <v-card-title>
                 <v-row>
                     <v-icon class="ml-4 mr-2">mdi-castle</v-icon>

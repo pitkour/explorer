@@ -1,12 +1,14 @@
 <template>
     <v-container>
-        <v-card class="mt-6 elevation-2">
+        <v-card class="elevation-2">
             <v-card-title>
                 <v-row>
                     <v-icon class="ml-4 mr-2">mdi-account-group</v-icon>
                     Users
                 </v-row>
+
                 <v-spacer></v-spacer>
+
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
@@ -15,6 +17,7 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>
+
             <v-data-table
                 :headers="headers"
                 :items="users"
@@ -24,6 +27,7 @@
                 <template v-slot:[`item.firstLogin`]="{ item }">
                     {{ formatUnixTimestamp(item.firstLogin) }}
                 </template>
+
                 <template v-slot:[`item.controls.view`]="{ item }">
                     <v-btn x-small fab :to="'/user/' + item.uuid">
                         <v-icon>mdi-eye</v-icon>
@@ -40,6 +44,7 @@ import FormatUtil from "../util/format-util";
 
 export default {
     name: "UserTable",
+
     apollo: {
         users: {
             query: Queries.getUsers,
@@ -50,16 +55,19 @@ export default {
             }
         }
     },
+
     methods: {
         formatUnixTimestamp(timestamp) {
             return FormatUtil.formatUnixTimestamp(timestamp);
         }
     },
+
     watch: {
         search(value) {
             console.debug(value);
         }
     },
+
     data: () => ({
         itemsPerPage: 10,
         search: "",

@@ -4,8 +4,8 @@
             :headers="headers"
             :items="permanentBans"
             :items-per-page="itemsPerPage"
-            :footer-props="{ 'items-per-page-options': [5, 10, 15, 20, -1] }"
-            class="my-10 elevation-2"
+            :footer-props="{ itemsPerPageOptions: [5, 10, 15, 20, -1] }"
+            class="elevation-2"
         >
             <template v-slot:[`item.createTime`]="{ item }">
                 {{ formatUnixTimestamp(item.createTime) }}
@@ -20,6 +20,7 @@ import FormatUtil from "../util/format-util";
 
 export default {
     name: "PermanentBanTable",
+
     apollo: {
         permanentBans: {
             query: Queries.getPermanentBans,
@@ -30,11 +31,13 @@ export default {
             }
         }
     },
+
     methods: {
         formatUnixTimestamp(timestamp) {
             return FormatUtil.formatUnixTimestamp(timestamp);
         }
     },
+
     data: () => ({
         itemsPerPage: 10,
         permanentBans: [],

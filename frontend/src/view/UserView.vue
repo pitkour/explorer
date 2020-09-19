@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-simple-table v-if="user != null" class="mt-6 elevation-2">
+        <v-simple-table v-if="user != null" class="elevation-2">
             <template v-slot:default>
                 <thead>
                     <tr>
@@ -38,6 +38,7 @@ import FormatUtil from "../util/format-util";
 
 export default {
     name: "UserView",
+
     apollo: {
         user: {
             query: Queries.getUser,
@@ -48,6 +49,7 @@ export default {
             }
         }
     },
+
     computed: {
         userTable() {
             return [

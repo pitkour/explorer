@@ -76,6 +76,7 @@ export default {
             }
         }
     `,
+
     getPermanentBans: gql`
         query getPermanentBans($items: Int!) {
             permanentBans(first: $items) {

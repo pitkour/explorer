@@ -1,6 +1,6 @@
 <template>
     <v-container v-if="team != null">
-        <v-simple-table class="mt-6 elevation-2">
+        <v-simple-table class="elevation-2">
             <template v-slot:default>
                 <thead>
                     <tr>
@@ -26,6 +26,7 @@
                 <template v-slot:default>
                     <thead>
                         <tr>
+                            <th></th>
                             <th>UUID</th>
                             <th>Nick</th>
                             <th>Rank</th>
@@ -36,6 +37,11 @@
 
                     <tbody>
                         <tr v-for="member in team.members" :key="member.uuid">
+                            <td>
+                                <v-btn x-small fab :to="'/user/' + member.user.uuid">
+                                    <v-icon>mdi-eye</v-icon>
+                                </v-btn>
+                            </td>
                             <td>{{ member.user.uuid }}</td>
                             <td>{{ member.user.nick }}</td>
                             <td>{{ formatRank(member.rank) }}</td>
