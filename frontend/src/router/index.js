@@ -5,6 +5,7 @@ import UserView from "../view/UserView";
 import UserTable from "../view/UserTable";
 import TeamView from "../view/TeamView";
 import TeamTable from "../view/TeamTable";
+import PermanentBanView from "../view/PermanentBanView";
 import PermanentBanTable from "../view/PermanentBanTable";
 
 Vue.use(VueRouter);
@@ -34,6 +35,11 @@ const routes = [
         path: "/teams",
         name: "Teams",
         component: TeamTable
+    },
+    {
+        path: "/permanent-ban/:uuid",
+        name: "Permanent Ban",
+        component: PermanentBanView
     },
     {
         path: "/permanent-bans",

@@ -77,6 +77,18 @@ export default {
         }
     `,
 
+    getPermanentBan: gql`
+        query getPermanentBan($uuid: String!) {
+            permanentBan(uuid: $uuid) {
+                nick
+                uuid
+                performer
+                createTime
+                reason
+            }
+        }
+    `,
+
     getPermanentBans: gql`
         query getPermanentBans($items: Int!) {
             permanentBans(first: $items) {
