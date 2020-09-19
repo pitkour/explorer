@@ -22,35 +22,34 @@
 
         <v-card v-if="team.members.length > 0" class="mt-8 elevation-2">
             <v-card-title>Members</v-card-title>
-            <v-simple-table>
-                <template v-slot:default>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>UUID</th>
-                            <th>Nick</th>
-                            <th>Rank</th>
-                            <th>Deposited Pitcoins</th>
-                            <th>Join Time</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr v-for="member in team.members" :key="member.uuid">
-                            <td>
-                                <v-btn x-small fab :to="'/user/' + member.user.uuid">
-                                    <v-icon>mdi-eye</v-icon>
-                                </v-btn>
-                            </td>
-                            <td>{{ member.user.uuid }}</td>
-                            <td>{{ member.user.nick }}</td>
-                            <td>{{ formatRank(member.rank) }}</td>
-                            <td>{{ member.coinsPaid }}</td>
-                            <td>{{ formatUnixTimestamp(member.joinTime) }}</td>
-                        </tr>
-                    </tbody>
+            <v-data-table
+                :headers="teamMembersHeaders"
+                :items="team.members"
+                :items-per-page="15"
+                :footer-props="{ itemsPerPageOptions: [5, 10, 15] }"
+            >
+                <template v-slot:[`item.controls.view`]="{ item }">
+                    <v-btn x-small fab :to="'/user/' + item.user.uuid">
+                        <v-icon>mdi-eye</v-icon>
+                    </v-btn>
                 </template>
-            </v-simple-table>
+
+                <template v-slot:[`item.uuid`]="{ item }">
+                    {{ item.user.uuid }}
+                </template>
+
+                <template v-slot:[`item.nick`]="{ item }">
+                    {{ item.user.nick }}
+                </template>
+
+                <template v-slot:[`item.rank`]="{ item }">
+                    {{ formatRank(item.rank) }}
+                </template>
+
+                <template v-slot:[`item.joinTime`]="{ item }">
+                    {{ formatUnixTimestamp(item.joinTime) }}
+                </template>
+            </v-data-table>
         </v-card>
     </v-container>
 </template>
@@ -112,6 +111,36 @@ export default {
                 }
             ];
         }
-    }
+    },
+
+    data: () => ({
+        teamMembersHeaders: [
+            {
+                text: "",
+                value: "controls.view",
+                sortable: false
+            },
+            {
+                text: "UUID",
+                value: "uuid"
+            },
+            {
+                text: "Nick",
+                value: "nick"
+            },
+            {
+                text: "Rank",
+                value: "rank"
+            },
+            {
+                text: "Deposited Pitcoins",
+                value: "coinsPaid"
+            },
+            {
+                text: "Join Time",
+                value: "joinTime"
+            }
+        ]
+    })
 };
 </script>
