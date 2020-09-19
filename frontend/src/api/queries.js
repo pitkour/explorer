@@ -13,6 +13,7 @@ export default {
                 firstNick
                 lastLogin: lastJoinTime
                 lastLogout: lastQuitTime
+                firstLogin: firstJoinTime
                 lostDuels
                 openedChests
                 permissionGroup
@@ -23,7 +24,9 @@ export default {
                 teamMember {
                     tag
                 }
-                firstLogin: firstJoinTime
+                permanentBan {
+                    uuid
+                }
             }
         }
     `,

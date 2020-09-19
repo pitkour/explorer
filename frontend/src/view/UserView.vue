@@ -13,7 +13,18 @@
                         <td>
                             <b>{{ entry.name }}</b>
                         </td>
-                        <td>{{ entry.value }}</td>
+                        <td>
+                            {{ entry.value }}
+                            <v-btn
+                                v-if="entry.view != null"
+                                class="ml-1"
+                                small
+                                icon
+                                :to="entry.view"
+                            >
+                                <v-icon>mdi-eye</v-icon>
+                            </v-btn>
+                        </td>
                     </tr>
                 </tbody>
             </template>
@@ -23,7 +34,6 @@
 
 <script>
 import Queries from "../api/queries";
-import DateUtil from "../util/date-util";
 import FormatUtil from "../util/format-util";
 
 export default {
@@ -102,23 +112,38 @@ export default {
                     value: this.user.questProgress + "/12"
                 },
                 {
-                    name: "Team",
-                    value:
-                        this.user.teamMember == null
-                            ? ""
-                            : this.user.teamMember.tag
-                },
-                {
                     name: "First Login",
-                    value: DateUtil.formatUnixTimestamp(this.user.firstLogin)
+                    value: FormatUtil.formatUnixTimestamp(this.user.firstLogin)
                 },
                 {
                     name: "Last Login",
-                    value: DateUtil.formatUnixTimestamp(this.user.lastLogin)
+                    value: FormatUtil.formatUnixTimestamp(this.user.lastLogin)
                 },
                 {
                     name: "Last Logout",
-                    value: DateUtil.formatUnixTimestamp(this.user.lastLogout)
+                    value: FormatUtil.formatUnixTimestamp(this.user.lastLogout)
+                },
+                {
+                    name: "Team",
+                    value:
+                        this.user.teamMember == null
+                            ? "N/A"
+                            : this.user.teamMember.tag,
+
+                    view:
+                        this.user.teamMember == null
+                            ? null
+                            : "/team/" + this.user.teamMember.tag
+                },
+                {
+                    name: "Permanent Banned",
+                    value: FormatUtil.formatBoolean(
+                        this.user.permanentBan != null
+                    ),
+                    view:
+                        this.user.permanentBan == null
+                            ? null
+                            : "/permanent-ban/" + this.user.permanentBan.uuid
                 }
             ];
         }

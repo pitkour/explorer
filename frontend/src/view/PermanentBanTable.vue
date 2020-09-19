@@ -16,7 +16,7 @@
 
 <script>
 import Queries from "../api/queries";
-import DateUtil from "../util/date-util";
+import FormatUtil from "../util/format-util";
 
 export default {
     name: "PermanentBanTable",
@@ -32,7 +32,7 @@ export default {
     },
     methods: {
         formatUnixTimestamp(timestamp) {
-            return DateUtil.formatUnixTimestamp(timestamp);
+            return FormatUtil.formatUnixTimestamp(timestamp);
         }
     },
     data: () => ({

@@ -1,4 +1,9 @@
 export default {
+    formatUnixTimestamp(timestamp, locale = "pl-PL") {
+        let date = new Date(timestamp);
+        return date.toLocaleString(locale);
+    },
+
     formatEnum(enumValue) {
         let first = true;
         let result = "";
@@ -14,5 +19,9 @@ export default {
             result += prefix + residue.toLowerCase();
         }
         return result;
+    },
+
+    formatBoolean(value) {
+        return value ? "Yes" : "No";
     }
 };

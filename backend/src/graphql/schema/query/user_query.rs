@@ -1,10 +1,12 @@
-use crate::database::model::{TeamMember, User};
+use diesel::prelude::*;
+use juniper::{FieldError, FieldResult};
+
+use crate::database::model::{PermanentBan, TeamMember, User};
+use crate::database::schema::pitkour_permamentbans::dsl::pitkour_permamentbans as pitkour_permanent_bans;
 use crate::database::schema::pitkour_teams_members::dsl::pitkour_teams_members;
 use crate::database::schema::pitkour_users::dsl::pitkour_users;
 use crate::database::schema::pitkour_users::nick as user_nick;
 use crate::graphql::context::Context;
-use diesel::prelude::*;
-use juniper::{FieldError, FieldResult};
 
 pub struct UserQuery;
 
@@ -52,6 +54,15 @@ impl User {
             .first(&connection)
             .optional()?;
         Ok(member)
+    }
+
+    pub fn permanent_ban(&self, context: &Context) -> FieldResult<Option<PermanentBan>> {
+        let connection = context.connection()?;
+        let permanent_ban = pitkour_permanent_bans
+            .find(&self.uuid)
+            .first(&connection)
+            .optional()?;
+        Ok(permanent_ban)
     }
 
     pub fn uuid(&self) -> &str {
