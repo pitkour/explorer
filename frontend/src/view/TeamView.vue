@@ -1,6 +1,6 @@
 <template>
     <v-container v-if="team != null">
-        <team-table :entries="teamTable" />
+        <simple-property-value-table :entries="teamTable" />
 
         <v-card v-if="team.members.length > 0" class="mt-8 elevation-2">
             <v-card-title>Members</v-card-title>
@@ -39,13 +39,13 @@
 <script>
 import Queries from "../api/queries";
 import FormatUtil from "../util/format-util";
-import TeamTable from "../components/SimplePropertyValueTable";
+import SimplePropertyValueTable from "../components/SimplePropertyValueTable";
 
 export default {
     name: "TeamView",
 
     components: {
-        TeamTable
+        SimplePropertyValueTable
     },
 
     apollo: {

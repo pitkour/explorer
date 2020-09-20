@@ -1,12 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../view/Home";
+import HomeView from "../view/HomeView";
 import UserView from "../view/UserView";
-import UserTable from "../view/UserTable";
+import UsersView from "../view/UsersView";
 import TeamView from "../view/TeamView";
-import TeamTable from "../view/TeamTable";
+import TeamsView from "../view/TeamsView";
 import PermanentBanView from "../view/PermanentBanView";
-import PermanentBanTable from "../view/PermanentBanTable";
+import PermanentBansView from "../view/PermanentBansView";
 
 Vue.use(VueRouter);
 
@@ -14,7 +14,7 @@ const routes = [
     {
         path: "",
         name: "Home",
-        component: Home
+        component: HomeView
     },
     {
         path: "/user/:uuid",
@@ -24,7 +24,7 @@ const routes = [
     {
         path: "/users",
         name: "Users",
-        component: UserTable
+        component: UsersView
     },
     {
         path: "/team/:tag",
@@ -34,7 +34,7 @@ const routes = [
     {
         path: "/teams",
         name: "Teams",
-        component: TeamTable
+        component: TeamsView
     },
     {
         path: "/permanent-ban/:uuid",
@@ -44,7 +44,7 @@ const routes = [
     {
         path: "/permanent-bans",
         name: "Permanent Bans",
-        component: PermanentBanTable
+        component: PermanentBansView
     }
 ];
 

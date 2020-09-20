@@ -1,19 +1,19 @@
 <template>
     <v-container v-if="user != null">
-        <user-table :entries="userTable" />
+        <simple-property-value-table :entries="userTable" />
     </v-container>
 </template>
 
 <script>
 import Queries from "../api/queries";
 import FormatUtil from "../util/format-util";
-import UserTable from "../components/SimplePropertyValueTable";
+import SimplePropertyValueTable from "../components/SimplePropertyValueTable";
 
 export default {
     name: "UserView",
 
     components: {
-        UserTable
+        SimplePropertyValueTable
     },
 
     apollo: {

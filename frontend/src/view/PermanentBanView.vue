@@ -1,19 +1,19 @@
 <template>
     <v-container v-if="permanentBan != null">
-        <permanent-ban-table :entries="permanentBanTable" />
+        <simple-property-value-table :entries="permanentBanTable" />
     </v-container>
 </template>
 
 <script>
 import Queries from "../api/queries";
 import FormatUtil from "../util/format-util";
-import PermanentBanTable from "../components/SimplePropertyValueTable";
+import SimplePropertyValueTable from "../components/SimplePropertyValueTable";
 
 export default {
     name: "PermanentBanView",
 
     components: {
-        PermanentBanTable
+        SimplePropertyValueTable
     },
 
     apollo: {
