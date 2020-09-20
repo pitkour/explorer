@@ -4,6 +4,7 @@ use juniper::{FieldError, FieldResult};
 use crate::database::model::{Team, TeamMember};
 use crate::database::schema::pitkour_teams::dsl::pitkour_teams;
 use crate::database::schema::pitkour_teams::name as team_name;
+use crate::database::schema::pitkour_teams::tag as team_tag;
 use crate::database::schema::pitkour_teams_members::dsl::pitkour_teams_members;
 use crate::database::schema::pitkour_teams_members::tag as member_team_tag;
 use crate::graphql::context::Context;
@@ -11,14 +12,30 @@ use crate::graphql::context::Context;
 pub struct TeamQuery;
 
 impl TeamQuery {
-    pub fn teams(context: &Context, first: Option<i32>) -> FieldResult<Vec<Team>> {
+    pub fn teams(
+        context: &Context,
+        first: Option<i32>,
+        search_query: Option<String>,
+    ) -> FieldResult<Vec<Team>> {
         let connection = context.connection()?;
-        let teams = if let Some(first) = first {
-            pitkour_teams
-                .limit(first as i64)
-                .load::<Team>(&connection)?
-        } else {
-            pitkour_teams.load::<Team>(&connection)?
+        let teams = match first {
+            Some(first) => match search_query {
+                Some(search_query) => pitkour_teams
+                    .filter(team_tag.like(format!("{}%", search_query)))
+                    .or_filter(team_name.like(format!("{}%", search_query)))
+                    .limit(first as i64)
+                    .load::<Team>(&connection)?,
+                None => pitkour_teams
+                    .limit(first as i64)
+                    .load::<Team>(&connection)?,
+            },
+            None => match search_query {
+                Some(search_query) => pitkour_teams
+                    .filter(team_tag.like(format!("{}%", search_query)))
+                    .or_filter(team_name.like(format!("{}%", search_query)))
+                    .load::<Team>(&connection)?,
+                None => pitkour_teams.load::<Team>(&connection)?,
+            },
         };
         Ok(teams)
     }

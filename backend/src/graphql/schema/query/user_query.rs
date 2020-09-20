@@ -6,19 +6,37 @@ use crate::database::schema::pitkour_permamentbans::dsl::pitkour_permamentbans a
 use crate::database::schema::pitkour_teams_members::dsl::pitkour_teams_members;
 use crate::database::schema::pitkour_users::dsl::pitkour_users;
 use crate::database::schema::pitkour_users::nick as user_nick;
+use crate::database::schema::pitkour_users::uuid as user_uuid;
+
 use crate::graphql::context::Context;
 
 pub struct UserQuery;
 
 impl UserQuery {
-    pub fn users(context: &Context, first: Option<i32>) -> FieldResult<Vec<User>> {
+    pub fn users(
+        context: &Context,
+        first: Option<i32>,
+        search_query: Option<String>,
+    ) -> FieldResult<Vec<User>> {
         let connection = context.connection()?;
-        let users = if let Some(first) = first {
-            pitkour_users
-                .limit(first as i64)
-                .load::<User>(&connection)?
-        } else {
-            pitkour_users.load::<User>(&connection)?
+        let users = match first {
+            Some(first) => match search_query {
+                Some(search_query) => pitkour_users
+                    .filter(user_uuid.like(format!("{}%", search_query)))
+                    .or_filter(user_nick.like(format!("{}%", search_query)))
+                    .limit(first as i64)
+                    .load::<User>(&connection)?,
+                None => pitkour_users
+                    .limit(first as i64)
+                    .load::<User>(&connection)?,
+            },
+            None => match search_query {
+                Some(search_query) => pitkour_users
+                    .filter(user_uuid.like(format!("{}%", search_query)))
+                    .or_filter(user_nick.like(format!("{}%", search_query)))
+                    .load::<User>(&connection)?,
+                None => pitkour_users.load::<User>(&connection)?,
+            },
         };
         Ok(users)
     }

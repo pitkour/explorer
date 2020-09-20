@@ -10,7 +10,7 @@
                 <v-spacer></v-spacer>
 
                 <v-text-field
-                    v-model="search"
+                    v-model="searchQuery"
                     append-icon="mdi-magnify"
                     label="Search"
                     single-line
@@ -50,7 +50,8 @@ export default {
             query: Queries.getUsers,
             variables() {
                 return {
-                    items: this.itemsPerPage * 3
+                    items: this.itemsPerPage * 3,
+                    searchQuery: this.searchQuery
                 };
             }
         }
@@ -63,14 +64,14 @@ export default {
     },
 
     watch: {
-        search(value) {
-            console.debug(value);
+        searchQuery(value) {
+            this.searchQuery = value ? value : null;
         }
     },
 
     data: () => ({
         itemsPerPage: 10,
-        search: "",
+        searchQuery: null,
         users: [],
         headers: [
             {

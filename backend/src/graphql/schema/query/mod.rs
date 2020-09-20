@@ -29,8 +29,12 @@ impl Query {
         CourseQuery::course(context, course_id, name)
     }
 
-    fn teams(context: &Context, first: Option<i32>) -> FieldResult<Vec<Team>> {
-        TeamQuery::teams(context, first)
+    fn teams(
+        context: &Context,
+        first: Option<i32>,
+        search_query: Option<String>,
+    ) -> FieldResult<Vec<Team>> {
+        TeamQuery::teams(context, first, search_query)
     }
 
     fn team(
@@ -41,8 +45,12 @@ impl Query {
         TeamQuery::team(context, tag, name)
     }
 
-    fn users(context: &Context, first: Option<i32>) -> FieldResult<Vec<User>> {
-        UserQuery::users(context, first)
+    fn users(
+        context: &Context,
+        first: Option<i32>,
+        search_query: Option<String>,
+    ) -> FieldResult<Vec<User>> {
+        UserQuery::users(context, first, search_query)
     }
 
     fn user(
@@ -53,8 +61,12 @@ impl Query {
         UserQuery::user(context, uuid, nick)
     }
 
-    fn permanent_bans(context: &Context, first: Option<i32>) -> FieldResult<Vec<PermanentBan>> {
-        PermanentBanQuery::permanent_bans(context, first)
+    fn permanent_bans(
+        context: &Context,
+        first: Option<i32>,
+        search_query: Option<String>,
+    ) -> FieldResult<Vec<PermanentBan>> {
+        PermanentBanQuery::permanent_bans(context, first, search_query)
     }
 
     fn permanent_ban(

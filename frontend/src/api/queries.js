@@ -32,8 +32,8 @@ export default {
     `,
 
     getUsers: gql`
-        query getUsers($items: Int!) {
-            users(first: $items) {
+        query getUsers($items: Int!, $searchQuery: String) {
+            users(first: $items, searchQuery: $searchQuery) {
                 nick
                 uuid
                 level
@@ -65,8 +65,8 @@ export default {
     `,
 
     getTeams: gql`
-        query getTeams($items: Int!) {
-            teams(first: $items) {
+        query getTeams($items: Int!, $searchQuery: String) {
+            teams(first: $items, searchQuery: $searchQuery) {
                 tag
                 name
                 creator
@@ -90,8 +90,8 @@ export default {
     `,
 
     getPermanentBans: gql`
-        query getPermanentBans($items: Int!) {
-            permanentBans(first: $items) {
+        query getPermanentBans($items: Int!, $searchQuery: String) {
+            permanentBans(first: $items, searchQuery: $searchQuery) {
                 nick
                 uuid
                 performer

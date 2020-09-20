@@ -39,15 +39,18 @@ import { mapGetters, mapMutations } from "vuex";
 
 export default {
     name: "Drawer",
+
     methods: {
         ...mapGetters(["isDrawerShown"]),
         ...mapMutations(["setDrawerShown"])
     },
+
     computed: {
         drawerShown: {
             get() {
                 return this.isDrawerShown();
             },
+
             set(value) {
                 this.setDrawerShown(value);
             }

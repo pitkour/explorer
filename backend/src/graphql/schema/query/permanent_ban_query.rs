@@ -1,6 +1,8 @@
 use crate::database::model::{PermanentBan, User};
 use crate::database::schema::pitkour_permamentbans::dsl::pitkour_permamentbans as pitkour_permanent_bans;
 use crate::database::schema::pitkour_permamentbans::nick as permanent_ban_nick;
+use crate::database::schema::pitkour_permamentbans::performer as permanent_ban_performer;
+use crate::database::schema::pitkour_permamentbans::uuid as permanent_ban_uuid;
 use crate::database::schema::pitkour_users::dsl::pitkour_users;
 use crate::graphql::context::Context;
 use diesel::prelude::*;
@@ -9,14 +11,32 @@ use juniper::{FieldError, FieldResult};
 pub struct PermanentBanQuery;
 
 impl PermanentBanQuery {
-    pub fn permanent_bans(context: &Context, first: Option<i32>) -> FieldResult<Vec<PermanentBan>> {
+    pub fn permanent_bans(
+        context: &Context,
+        first: Option<i32>,
+        search_query: Option<String>,
+    ) -> FieldResult<Vec<PermanentBan>> {
         let connection = context.connection()?;
-        let permanent_bans = if let Some(first) = first {
-            pitkour_permanent_bans
-                .limit(first as i64)
-                .load::<PermanentBan>(&connection)?
-        } else {
-            pitkour_permanent_bans.load::<PermanentBan>(&connection)?
+        let permanent_bans = match first {
+            Some(first) => match search_query {
+                Some(search_query) => pitkour_permanent_bans
+                    .filter(permanent_ban_uuid.like(format!("{}%", search_query)))
+                    .or_filter(permanent_ban_nick.like(format!("{}%", search_query)))
+                    .or_filter(permanent_ban_performer.like(format!("{}%", search_query)))
+                    .limit(first as i64)
+                    .load::<PermanentBan>(&connection)?,
+                None => pitkour_permanent_bans
+                    .limit(first as i64)
+                    .load::<PermanentBan>(&connection)?,
+            },
+            None => match search_query {
+                Some(search_query) => pitkour_permanent_bans
+                    .filter(permanent_ban_uuid.like(format!("{}%", search_query)))
+                    .or_filter(permanent_ban_nick.like(format!("{}%", search_query)))
+                    .or_filter(permanent_ban_performer.like(format!("{}%", search_query)))
+                    .load::<PermanentBan>(&connection)?,
+                None => pitkour_permanent_bans.load::<PermanentBan>(&connection)?,
+            },
         };
         Ok(permanent_bans)
     }
