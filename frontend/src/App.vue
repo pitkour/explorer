@@ -7,14 +7,14 @@
             <router-view class="my-8" />
         </v-main>
 
-        <site-footer />
+        <Footer />
     </v-app>
 </template>
 
 <script>
 import MenuBar from "./components/MenuBar";
 import Drawer from "./components/Drawer";
-import SiteFooter from "./components/SiteFooter";
+import Footer from "./components/Footer";
 
 export default {
     name: "App",
@@ -22,7 +22,7 @@ export default {
     components: {
         MenuBar,
         Drawer,
-        SiteFooter
+        Footer
     }
 };
 </script>

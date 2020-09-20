@@ -1,5 +1,10 @@
 <template>
-    <v-navigation-drawer v-model="drawerShown" absolute temporary>
+    <v-navigation-drawer
+        v-model="drawerShown"
+        absolute
+        temporary
+        class="elevation-0"
+    >
         <v-list nav dense>
             <v-list-item-group>
                 <v-list-item to="/">

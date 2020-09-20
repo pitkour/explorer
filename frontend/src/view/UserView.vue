@@ -2,6 +2,10 @@
     <v-container v-if="user != null">
         <simple-property-value-table :entries="userTable" />
     </v-container>
+
+    <v-container v-else>
+        <v-skeleton-loader type="table" />
+    </v-container>
 </template>
 
 <script>

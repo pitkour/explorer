@@ -1,6 +1,6 @@
 <template>
     <v-container v-if="team != null">
-        <simple-property-value-table :entries="teamTable" />
+        <simple-property-value-table :entries="teamTable" :tag="team.tag" />
 
         <v-card v-if="team.members.length > 0" class="mt-8 elevation-2">
             <v-card-title>Members</v-card-title>
@@ -33,6 +33,10 @@
                 </template>
             </v-data-table>
         </v-card>
+    </v-container>
+
+    <v-container v-else>
+        <v-skeleton-loader type="table" />
     </v-container>
 </template>
 
@@ -74,23 +78,37 @@ export default {
             return [
                 {
                     name: "Tag",
+                    property: "tag",
                     value: this.team.tag
                 },
                 {
                     name: "Name",
-                    value: this.team.name
+                    property: "name",
+                    value: this.team.name,
+                    edit: value => ({
+                        name: value
+                    })
                 },
                 {
                     name: "Creator",
-                    value: this.team.creator
+                    property: "creator",
+                    value: this.team.creator,
+                    edit: value => ({
+                        creator: value
+                    })
                 },
                 {
                     name: "Create Time",
+                    property: "createTime",
                     value: FormatUtil.formatUnixTimestamp(this.team.createTime)
                 },
                 {
                     name: "Pitcoins Balance",
-                    value: this.team.coins
+                    property: "coins",
+                    value: this.team.coins,
+                    edit: value => ({
+                        coins: parseInt(value, 10)
+                    })
                 },
                 {
                     name: "Members",

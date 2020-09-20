@@ -2,6 +2,10 @@
     <v-container v-if="permanentBan != null">
         <simple-property-value-table :entries="permanentBanTable" />
     </v-container>
+
+    <v-container v-else>
+        <v-skeleton-loader type="table" />
+    </v-container>
 </template>
 
 <script>
@@ -37,7 +41,7 @@ export default {
                 },
                 {
                     name: "Nick",
-                    value: this.permanentBan.nick
+                    value: this.permanentBan.nick,
                 },
                 {
                     name: "Reason",
