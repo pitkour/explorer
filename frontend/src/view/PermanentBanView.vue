@@ -36,23 +36,28 @@ export default {
             return [
                 {
                     name: "UUID",
+                    property: "uuid",
                     value: this.permanentBan.uuid,
                     view: "/user/" + this.permanentBan.uuid
                 },
                 {
                     name: "Nick",
-                    value: this.permanentBan.nick,
+                    property: "nick",
+                    value: this.permanentBan.nick
                 },
                 {
                     name: "Reason",
+                    property: "reason",
                     value: this.permanentBan.reason
                 },
                 {
                     name: "Performer",
+                    property: "performer",
                     value: this.permanentBan.performer
                 },
                 {
                     name: "Performed",
+                    property: "createTime",
                     value: FormatUtil.formatUnixTimestamp(
                         this.permanentBan.createTime
                     )
