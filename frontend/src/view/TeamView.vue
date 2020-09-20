@@ -1,24 +1,6 @@
 <template>
     <v-container v-if="team != null">
-        <v-simple-table class="elevation-2">
-            <template v-slot:default>
-                <thead>
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr v-for="entry in teamTable" :key="entry.name">
-                        <td>
-                            <b>{{ entry.name }}</b>
-                        </td>
-                        <td>{{ entry.value }}</td>
-                    </tr>
-                </tbody>
-            </template>
-        </v-simple-table>
+        <team-table :entries="teamTable" />
 
         <v-card v-if="team.members.length > 0" class="mt-8 elevation-2">
             <v-card-title>Members</v-card-title>
@@ -57,9 +39,14 @@
 <script>
 import Queries from "../api/queries";
 import FormatUtil from "../util/format-util";
+import TeamTable from "../components/SimplePropertyValueTable";
 
 export default {
     name: "TeamView",
+
+    components: {
+        TeamTable
+    },
 
     apollo: {
         team: {

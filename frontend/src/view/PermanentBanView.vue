@@ -1,43 +1,20 @@
 <template>
-    <v-container>
-        <v-simple-table v-if="permanentBan != null" class="elevation-2">
-            <template v-slot:default>
-                <thead>
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="entry in permanentBanTable" :key="entry.name">
-                        <td>
-                            <b>{{ entry.name }}</b>
-                        </td>
-                        <td>
-                            {{ entry.value }}
-                            <v-btn
-                                v-if="entry.view != null"
-                                class="ml-1"
-                                small
-                                icon
-                                :to="entry.view"
-                            >
-                                <v-icon>mdi-eye</v-icon>
-                            </v-btn>
-                        </td>
-                    </tr>
-                </tbody>
-            </template>
-        </v-simple-table>
+    <v-container v-if="permanentBan != null">
+        <permanent-ban-table :entries="permanentBanTable" />
     </v-container>
 </template>
 
 <script>
 import Queries from "../api/queries";
 import FormatUtil from "../util/format-util";
+import PermanentBanTable from "../components/SimplePropertyValueTable";
 
 export default {
     name: "PermanentBanView",
+
+    components: {
+        PermanentBanTable
+    },
 
     apollo: {
         permanentBan: {
