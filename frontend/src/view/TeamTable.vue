@@ -3,19 +3,15 @@
         <v-card class="elevation-2">
             <v-card-title>
                 <v-row>
-                    <v-icon class="ml-4 mr-2">mdi-castle</v-icon>
+                    <v-icon class="ml-4 mr-2">
+                        mdi-castle
+                    </v-icon>
                     Teams
                 </v-row>
 
-                <v-spacer></v-spacer>
+                <v-spacer />
 
-                <v-text-field
-                    v-model="searchQuery"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
-                ></v-text-field>
+                <search-bar :searchQuery.sync="searchQuery" />
             </v-card-title>
 
             <v-data-table
@@ -45,9 +41,15 @@
 <script>
 import Queries from "../api/queries";
 import FormatUtil from "../util/format-util";
+import SearchBar from "../components/SearchBar";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
     name: "TeamTable",
+
+    components: {
+        SearchBar
+    },
 
     apollo: {
         teams: {
@@ -62,20 +64,28 @@ export default {
     },
 
     methods: {
+        ...mapGetters(["getTeamSearchQuery"]),
+        ...mapMutations(["setTeamSearchQuery"]),
+
         formatUnixTimestamp(timestamp) {
             return FormatUtil.formatUnixTimestamp(timestamp);
         }
     },
 
-    watch: {
-        searchQuery(value) {
-            this.searchQuery = value ? value : null;
+    computed: {
+        searchQuery: {
+            get() {
+                return this.getTeamSearchQuery();
+            },
+
+            set(value) {
+                this.setTeamSearchQuery(value);
+            }
         }
     },
 
     data: () => ({
         itemsPerPage: 10,
-        searchQuery: null,
         teams: [],
         headers: [
             {
