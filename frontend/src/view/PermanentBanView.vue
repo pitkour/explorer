@@ -1,6 +1,9 @@
 <template>
     <v-container v-if="permanentBan != null">
-        <simple-property-value-table :entries="permanentBanTable" />
+        <simple-property-value-table
+            :entries="permanentBanTable"
+            :updateEntry="updateEntry"
+        />
     </v-container>
 
     <v-container v-else>
@@ -10,6 +13,7 @@
 
 <script>
 import Queries from "../api/queries";
+import Mutations from "../api/mutations";
 import FormatUtil from "../util/format-util";
 import SimplePropertyValueTable from "../components/SimplePropertyValueTable";
 
@@ -31,33 +35,69 @@ export default {
         }
     },
 
+    methods: {
+        updateEntry(value, modifiable) {
+            const uuid = this.permanentBan.uuid;
+            const mutation = {
+                mutation: Mutations.updatePermanentBan,
+
+                variables: {
+                    uuid,
+                    [modifiable.property]:
+                        modifiable.map == null ? value : modifiable.map(value)
+                },
+
+                update(store, { data: { updatePermanentBan } }) {
+                    if (updatePermanentBan.affectedRows == 0) {
+                        return;
+                    }
+                    let query = {
+                        query: Queries.getPermanentBan,
+                        variables: { uuid }
+                    };
+                    let data = store.readQuery(query);
+                    data.permanentBan[modifiable.property] = value;
+                    store.writeQuery({
+                        ...query,
+                        data
+                    });
+                }
+            };
+            this.$apollo.mutate(mutation);
+        }
+    },
+
     computed: {
         permanentBanTable() {
             return [
                 {
                     name: "UUID",
-                    property: "uuid",
                     value: this.permanentBan.uuid,
                     view: "/user/" + this.permanentBan.uuid
                 },
                 {
                     name: "Nick",
-                    property: "nick",
-                    value: this.permanentBan.nick
+                    value: this.permanentBan.nick,
+                    modifiable: {
+                        property: "nick"
+                    }
                 },
                 {
                     name: "Reason",
-                    property: "reason",
-                    value: this.permanentBan.reason
+                    value: this.permanentBan.reason,
+                    modifiable: {
+                        property: "reason"
+                    }
                 },
                 {
                     name: "Performer",
-                    property: "performer",
-                    value: this.permanentBan.performer
+                    value: this.permanentBan.performer,
+                    modifiable: {
+                        property: "performer"
+                    }
                 },
                 {
                     name: "Performed",
-                    property: "createTime",
                     value: FormatUtil.formatUnixTimestamp(
                         this.permanentBan.createTime
                     )

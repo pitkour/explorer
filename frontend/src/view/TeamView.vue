@@ -1,6 +1,9 @@
 <template>
     <v-container v-if="team != null">
-        <simple-property-value-table :entries="teamTable" :tag="team.tag" />
+        <simple-property-value-table
+            :entries="teamTable"
+            :updateEntry="updateEntry"
+        />
 
         <v-card v-if="team.members.length > 0" class="mt-8 elevation-2">
             <v-card-title>Members</v-card-title>
@@ -42,6 +45,7 @@
 
 <script>
 import Queries from "../api/queries";
+import Mutations from "../api/mutations";
 import FormatUtil from "../util/format-util";
 import SimplePropertyValueTable from "../components/SimplePropertyValueTable";
 
@@ -70,6 +74,36 @@ export default {
 
         formatRank(rank) {
             return FormatUtil.formatEnum(rank);
+        },
+
+        updateEntry(value, modifiable) {
+            const tag = this.team.tag;
+            const mutation = {
+                mutation: Mutations.updateTeam,
+
+                variables: {
+                    tag,
+                    [modifiable.property]:
+                        modifiable.map == null ? value : modifiable.map(value)
+                },
+
+                update(store, { data: { updateTeam } }) {
+                    if (updateTeam.affectedRows == 0) {
+                        return;
+                    }
+                    let query = {
+                        query: Queries.getTeam,
+                        variables: { tag }
+                    };
+                    let data = store.readQuery(query);
+                    data.team[modifiable.property] = value;
+                    store.writeQuery({
+                        ...query,
+                        data
+                    });
+                }
+            };
+            this.$apollo.mutate(mutation);
         }
     },
 
@@ -78,37 +112,33 @@ export default {
             return [
                 {
                     name: "Tag",
-                    property: "tag",
                     value: this.team.tag
                 },
                 {
                     name: "Name",
-                    property: "name",
                     value: this.team.name,
-                    edit: value => ({
-                        name: value
-                    })
+                    modifiable: {
+                        property: "name"
+                    }
                 },
                 {
                     name: "Creator",
-                    property: "creator",
                     value: this.team.creator,
-                    edit: value => ({
-                        creator: value
-                    })
+                    modifiable: {
+                        property: "creator"
+                    }
                 },
                 {
                     name: "Create Time",
-                    property: "createTime",
                     value: FormatUtil.formatUnixTimestamp(this.team.createTime)
                 },
                 {
                     name: "Pitcoins Balance",
-                    property: "coins",
                     value: this.team.coins,
-                    edit: value => ({
-                        coins: parseInt(value, 10)
-                    })
+                    modifiable: {
+                        property: "coins",
+                        map: value => parseInt(value, 10)
+                    }
                 },
                 {
                     name: "Members",

@@ -72,7 +72,7 @@
                                 </v-btn>
 
                                 <v-btn
-                                    v-if="entry.edit != null"
+                                    v-if="entry.modifiable != null"
                                     class="ml-1"
                                     small
                                     icon
@@ -90,9 +90,6 @@
 </template>
 
 <script>
-import Queries from "../api/queries";
-import Mutations from "../api/mutations";
-
 export default {
     name: "SimplePropertyValueTable",
 
@@ -111,41 +108,11 @@ export default {
         saveModification() {
             let modification = this.modification;
             this.stopModification();
-            this.updateEntry(modification);
-        },
-
-        updateEntry(modification) {
-            const tag = this.tag;
-            const value = modification.value;
-            const mutation = {
-                mutation: Mutations.updateTeam, // TODO: only valid for team
-
-                variables: {
-                    tag,
-                    ...modification.entry.edit(value)
-                },
-
-                update(store, { data: { updateTeam } }) {
-                    if (updateTeam.affectedRows == 0) {
-                        return;
-                    }
-                    let query = {
-                        query: Queries.getTeam,
-                        variables: { tag: tag }
-                    };
-                    let data = store.readQuery(query);
-                    data.team[modification.entry.property] = value;
-                    store.writeQuery({
-                        ...query,
-                        data
-                    });
-                }
-            };
-            this.$apollo.mutate(mutation);
+            this.updateEntry(modification.value, modification.entry.modifiable);
         }
     },
 
-    props: ["entries", "tag"],
+    props: ["entries", "updateEntry"],
 
     data: () => ({
         modification: null

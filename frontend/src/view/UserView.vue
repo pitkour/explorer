@@ -1,6 +1,9 @@
 <template>
     <v-container v-if="user != null">
-        <simple-property-value-table :entries="userTable" />
+        <simple-property-value-table
+            :entries="userTable"
+            :updateEntry="updateEntry"
+        />
     </v-container>
 
     <v-container v-else>
@@ -10,6 +13,7 @@
 
 <script>
 import Queries from "../api/queries";
+import Mutations from "../api/mutations";
 import FormatUtil from "../util/format-util";
 import SimplePropertyValueTable from "../components/SimplePropertyValueTable";
 
@@ -31,33 +35,74 @@ export default {
         }
     },
 
+    methods: {
+        updateEntry(value, modifiable) {
+            const uuid = this.user.uuid;
+            const mutation = {
+                mutation: Mutations.updateUser,
+
+                variables: {
+                    uuid,
+                    [modifiable.property]:
+                        modifiable.map == null ? value : modifiable.map(value)
+                },
+
+                update(store, { data: { updateUser } }) {
+                    if (updateUser.affectedRows == 0) {
+                        return;
+                    }
+                    let query = {
+                        query: Queries.getUser,
+                        variables: { uuid }
+                    };
+                    let data = store.readQuery(query);
+                    data.user[modifiable.property] = value;
+                    store.writeQuery({
+                        ...query,
+                        data
+                    });
+                }
+            };
+            this.$apollo.mutate(mutation);
+        }
+    },
+
     computed: {
         userTable() {
             return [
                 {
                     name: "UUID",
-                    property: "uuid",
                     value: this.user.uuid
                 },
                 {
                     name: "First Nick",
-                    property: "firstNick",
-                    value: this.user.firstNick
+                    value: this.user.firstNick,
+                    modifiable: {
+                        property: "firstNick"
+                    }
                 },
                 {
                     name: "Nick",
-                    property: "nick",
-                    value: this.user.nick
+                    value: this.user.nick,
+                    modifiable: {
+                        property: "nick"
+                    }
                 },
                 {
                     name: "Level",
-                    property: "level",
-                    value: this.user.level
+                    value: this.user.level,
+                    modifiable: {
+                        property: "level",
+                        map: value => parseInt(value, 10)
+                    }
                 },
                 {
                     name: "Experience",
-                    property: "experience",
-                    value: this.user.experience
+                    value: this.user.experience,
+                    modifiable: {
+                        property: "experience",
+                        map: value => parseInt(value, 10)
+                    }
                 },
                 {
                     name: "Owned Chests",
